@@ -143,3 +143,22 @@ function test_shouldHandleMultipleOpTypes()
     assert( o[1] == 2 )
     assert( o[2] == 4 )
 end
+
+function test_reverseShouldWork()
+    local o1 = seq.toSeq{ 1,2,3,4 }.reverse().evaluate
+
+    assert( o1[0] == nil )
+    assert( o1[1] == 4 )
+    assert( o1[2] == 3 )
+    assert( o1[3] == 2 )
+    assert( o1[4] == 1 )
+    assert( o1[5] == nil )
+
+    local o2 = seq.toSeq{ 1,2,3 }.reverse().evaluate
+
+    assert( o2[0] == nil )
+    assert( o2[1] == 3 )
+    assert( o2[2] == 2 )
+    assert( o2[3] == 1 )
+    assert( o2[4] == nil )
+end

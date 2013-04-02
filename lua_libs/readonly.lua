@@ -9,8 +9,8 @@ function readonlyMeta.__newindex( table, key, value )
 end
 
 function readonlyMeta.__index( proxy, key )
-   local table = rawget( proxy, realKey ) 
-   return table[key]
+    local table = proxy[realKey] 
+    return table[key]
 end
 
 local function inext( table, i )
@@ -22,18 +22,25 @@ local function inext( table, i )
 end
 
 local function ipairs( proxy )
-    return inext, rawget( proxy, realKey ), 0
+    return inext, proxy[realKey], 0
 end
 
 local function pairs( proxy )
-    return next, rawget( proxy, realKey ), nil
+    return next, proxy[realKey], nil
+end
+
+-- I would rather do this as a metamethod, but
+-- it seems this fails in lua 5.1
+local function length( proxy )
+    return #proxy[realKey]
 end
 
 function shallowReadonly( table )
     local proxy = { 
         [realKey] = table,
         ipairs = ipairs, 
-        pairs = pairs }
+        pairs = pairs,
+        length = length, }
     setmetatable( proxy, readonlyMeta )
     return proxy 
 end

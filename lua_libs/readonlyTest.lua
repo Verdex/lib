@@ -77,3 +77,10 @@ function test_pairsReplacementShouldWork()
     assert( accum.b == "dog" )
     assert( accum[key] == "bear" )
 end
+
+function test_lengthMethodShouldFunction()
+    local ro = readonly.shallowReadonly{ 1, 2, 3, 4, a = "a" }
+
+    assert( ro:length() == 4 )
+end
+    

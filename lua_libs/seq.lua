@@ -77,3 +77,13 @@ function seqMeta.where( input, pred )
     end
     return output
 end
+
+function seqMeta.reverse( input )
+    local output = {}
+    local revIndex = input:length() + 1
+    for i, v in input:ipairs() do
+        output[revIndex - i] = v
+    end
+    return output
+end
+
