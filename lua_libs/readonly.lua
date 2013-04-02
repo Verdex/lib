@@ -35,6 +35,10 @@ local function length( proxy )
     return #proxy[realKey]
 end
 
+function isReadonly( proxy )
+    return getmetatable( proxy ) == readonlyMeta
+end
+
 function shallowReadonly( table )
     local proxy = { 
         [realKey] = table,

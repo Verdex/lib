@@ -84,3 +84,10 @@ function test_lengthMethodShouldFunction()
     assert( ro:length() == 4 )
 end
     
+function test_isReadonlyShouldFunction()
+    local ro = readonly.shallowReadonly{ 1,2,3 }
+    local o = { 1,2,3 }
+
+    assert( readonly.isReadonly( ro ) == true )
+    assert( readonly.isReadonly( o ) == false )
+end
