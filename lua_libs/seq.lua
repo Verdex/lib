@@ -109,3 +109,7 @@ function seqMeta.concat( input, otherList )
     end
     return output
 end
+
+-- TODO drop, take, drop while, take while, zip, zipWith
+-- TODO fold, all, and any other function that reduces to a scalar
+-- isn't going to work very well.  Need to find work around.
