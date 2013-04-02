@@ -87,3 +87,25 @@ function seqMeta.reverse( input )
     return output
 end
 
+function seqMeta.concat( input, otherList )
+    local output = {}
+    for _, v in input:ipairs() do
+        output[#output + 1] = v
+    end
+    if getmetatable( otherList ) == seqMeta then
+        for _, v in otherList.evaluate:ipairs() do
+            output[#output + 1] = v
+        end
+    elseif readonly.isReadonly( otherList ) then
+        for _, v in otherList:ipairs() do
+            output[#output + 1] = v
+        end
+    elseif type( otherList ) == 'table' then
+        for _, v in ipairs( otherList ) do
+            output[#output + 1] = v
+        end
+    else
+        output[#output + 1] = otherList -- not a list, but probably a scalar
+    end
+    return output
+end

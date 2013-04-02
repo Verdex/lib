@@ -1,5 +1,6 @@
 
 require 'seq'
+require 'readonly'
 require 'test'
 
 test.init()
@@ -161,4 +162,89 @@ function test_reverseShouldWork()
     assert( o2[2] == 2 )
     assert( o2[3] == 1 )
     assert( o2[4] == nil )
+end
+
+function test_concatShouldWorkWithLists()
+    local o = seq.toSeq{ 1,2,3 }.concat{ 4,5,6 }.evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == 4 )
+    assert( o[5] == 5 )
+    assert( o[6] == 6 )
+end
+
+function test_concatShouldWorkWithEmptyLists()
+    local o = seq.toSeq{ 1,2,3 }.concat{}.evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == nil )
+end
+
+function test_concatShouldWorkWithReadOnlyLists()
+    local o = seq.toSeq{ 1,2,3 }.concat( readonly.shallowReadonly{ 4,5,6 } ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == 4 )
+    assert( o[5] == 5 )
+    assert( o[6] == 6 )
+end
+
+function test_concatShouldWorkWithSeq()
+    local o = seq.toSeq{ 1,2,3 }
+        .concat( 
+            seq.toSeq{ 3,4,5 }.map( function ( v ) return v + 1 end ) )
+        .evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == 4 )
+    assert( o[5] == 5 )
+    assert( o[6] == 6 )
+end
+
+function test_concatShouldWorkWithEmptySeq()
+    local o = seq.toSeq{ 1,2,3 }.concat( seq.empty() ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == nil )
+
+    o = seq.toSeq{}.concat( seq.toSeq{ 1,2,3 } ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == nil )
+end
+
+function test_concatShouldWorkWithScalar()
+    local o = seq.toSeq{ 1,2,3 }.concat( "string" ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == "string" ) 
+end
+
+-- This is basically a hack, but it's a valid use case.
+-- It would be easier to get the expected behavior with a type system.
+-- For now I'm just going to use this hack if I need list of list 
+-- behavior.
+function test_concatShouldAllowListAsScalarHack()
+    local o = seq.toSeq{ 1,2,3 }.concat{ { 4,5,6 } }.evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4][1] == 4 )
+    assert( o[4][2] == 5 )
+    assert( o[4][3] == 6 )
 end
