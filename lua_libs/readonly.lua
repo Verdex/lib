@@ -1,6 +1,4 @@
 
--- TODO ipairs does not appear to work on readonly tables
-
 module( ..., package.seeall )
 
 local readonlyMeta = {}
