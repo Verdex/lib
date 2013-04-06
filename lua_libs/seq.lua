@@ -110,6 +110,13 @@ function seqMeta.concat( input, otherList )
     return output
 end
 
--- TODO drop, take, drop while, take while, zip, zipWith
+function seqMeta.drop( input, dropCount )
+    local output = {}
+    for i = dropCount + 1, input:length() do
+        output[#output + 1] = input[i]
+    end
+    return output
+end
+-- TODO take, drop while, take while, zip, zipWith
 -- TODO fold, all, and any other function that reduces to a scalar
 -- isn't going to work very well.  Need to find work around.

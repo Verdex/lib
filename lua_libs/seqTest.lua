@@ -248,3 +248,33 @@ function test_concatShouldAllowListAsScalarHack()
     assert( o[4][2] == 5 )
     assert( o[4][3] == 6 )
 end
+
+function test_dropCorrectNumberOfItems()
+    local o = seq.toSeq{ 1,2,3,4,5,6 }.drop( 3 ).evaluate
+
+    assert( o[0] == nil )
+    assert( o[1] == 4 )
+    assert( o[2] == 5 )
+    assert( o[3] == 6 )
+    assert( o[4] == nil )
+end
+
+function test_dropZeroItems() 
+    local o = seq.toSeq{ 1,2,3 }.drop( 0 ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+end
+
+function test_dropMoreItemsThanExistResultsInEmptySeq() 
+    local o = seq.toSeq{ 1,2,3 }.drop( 10 ).evaluate
+
+    assert( o[1] == nil )
+end
+
+function test_dropFromEmptySeqWorks() 
+    local o = seq.toSeq{}.drop( 1 ).evaluate
+
+    assert( o[1] == nil )
+end
