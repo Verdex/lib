@@ -278,3 +278,35 @@ function test_dropFromEmptySeqWorks()
 
     assert( o[1] == nil )
 end
+
+function test_takeCorrectNumberOfItems()
+    local o = seq.toSeq{ 1,2,3,4,5,6 }.take( 3 ).evaluate
+
+    assert( o[0] == nil )
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == nil )
+end
+
+function test_takeZeroItemsCorrectly()
+    local o = seq.toSeq{ 1,2,3 }.take( 0 ).evaluate
+
+    assert( o[1] == nil )
+end
+
+function test_takeFromEmptySeqCorrectly()
+    local o = seq.toSeq{}.take( 1 ).evaluate
+
+    assert( o[1] == nil )
+end
+
+function test_takeMoreItemsThanExistWorks()
+    local o = seq.toSeq{ 1,2,3 }.take( 10 ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == nil )
+end
+

@@ -117,6 +117,14 @@ function seqMeta.drop( input, dropCount )
     end
     return output
 end
+
+function seqMeta.take( input, takeCount )
+    local output = {}
+    for i = 1, takeCount do
+        output[#output + 1] = input[i]
+    end
+    return output
+end
 -- TODO take, drop while, take while, zip, zipWith
 -- TODO fold, all, and any other function that reduces to a scalar
 -- isn't going to work very well.  Need to find work around.
