@@ -373,3 +373,58 @@ function test_takeWhileShouldHandlePredicateAlwaysFalse()
 
     assert( o[1] == nil )
 end
+
+function test_zipWithShouldHandleTableInput()
+    local o = seq.toSeq{ 1,2,3 }.zipWith( { 2,3,4 }, function (a,b) return a + b end ).evaluate
+
+    assert( o[0] == nil )
+    assert( o[1] == 3 )
+    assert( o[2] == 5 )
+    assert( o[3] == 7 )
+    assert( o[4] == nil )
+end
+
+function test_zipWithShouldHandleReadonlyInput()
+    local o = seq.toSeq{ 1,2,3 }.zipWith( 
+        readonly.shallowReadonly{ 2,3,4 }, function (a,b) return a + b end ).evaluate
+
+    assert( o[0] == nil )
+    assert( o[1] == 3 )
+    assert( o[2] == 5 )
+    assert( o[3] == 7 )
+    assert( o[4] == nil )
+end
+
+function test_zipWithShouldHandleSeqInput()
+    local o = seq.toSeq{ 1,2,3 }.zipWith( 
+        seq.toSeq{ 2,3,4 }, function (a,b) return a + b end ).evaluate
+
+    assert( o[0] == nil )
+    assert( o[1] == 3 )
+    assert( o[2] == 5 )
+    assert( o[3] == 7 )
+    assert( o[4] == nil )
+end
+
+function test_zipWithShouldHandleEmptyInput()
+    local o1 = seq.empty().zipWith( {}, function (a,b) return a + b end ).evaluate
+    local o2 = seq.empty().zipWith( {1}, function (a,b) return a + b end ).evaluate
+    local o3 = seq.toSeq{ 1 }.zipWith( {}, function (a,b) return a + b end ).evaluate
+
+    assert( o1[1] == nil )
+    assert( o2[1] == nil )
+    assert( o3[1] == nil )
+end
+
+function test_zipWithShouldHandleUnequalInputs()
+    local o1 = seq.toSeq{ 1,2,3 }.zipWith( { 2,3 }, function (a,b) return a + b end ).evaluate
+    local o2 = seq.toSeq{ 1,2 }.zipWith( { 1,2,3 }, function (a,b) return a + b end ).evaluate
+
+    assert( o1[1] == 3 )
+    assert( o1[2] == 5 )
+    assert( o1[3] == nil )
+
+    assert( o2[1] == 2 )
+    assert( o2[2] == 4 )
+    assert( o2[3] == nil )
+end

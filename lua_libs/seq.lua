@@ -151,7 +151,33 @@ function seqMeta.takeWhile( input, pred )
     return output
 end
 
+local function zipWithHelper( ro1, ro2, zip )
+    local l1 = ro1:length()
+    local l2 = ro2:length()
+    local i = 1
+    local output = {}
+
+    while i <= l1 and i <= l2 do
+        output[i] = zip( ro1[i], ro2[i] )
+        i = i + 1
+    end
+    return output 
+end
+
+function seqMeta.zipWith( input1, input2, zip )
+    if getmetatable( input2) == seqMeta then
+        return zipWithHelper( input1, input2.evaluate, zip )
+    elseif readonly.isReadonly( input2 ) then
+        return zipWithHelper( input1, input2, zip )
+    elseif type( input2 ) == 'table' then
+        return zipWithHelper( input1, readonly.shallowReadonly( input2 ), zip )
+    else
+        error "unknown array type"
+    end
+end
+
+
 -- TODO several cases of output[#output+1] can be replaced with output[i] (not all)
--- TODO take while, zip, zipWith
+-- TODO  zipWith
 -- TODO fold, all, and any other function that reduces to a scalar
 -- isn't going to work very well.  Need to find work around.
