@@ -10,6 +10,7 @@ readonly array.  Things like fold, any, etc.
 
 --]]
 
+-- TODO several cases of output[#output+1] can be replaced with output[i] (not all)
 
 module( ..., package.seeall )
 
@@ -186,6 +187,20 @@ function seqMeta.fold( input, init, folder )
     return { init }
 end
     
--- TODO several cases of output[#output+1] can be replaced with output[i] (not all)
--- TODO fold, all, and any other function that reduces to a scalar
--- isn't going to work very well.  Need to find work around.
+function seqMeta.any( input, pred )
+    for _, v in input:ipairs() do
+        if pred( v ) then
+            return { true }
+        end
+    end
+    return { false }
+end
+
+function seqMeta.all( input, pred )
+    for _, v in input:ipairs() do
+        if pred( v ) == false then
+            return { false }
+        end
+    end
+    return { true }
+end

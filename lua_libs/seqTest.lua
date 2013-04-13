@@ -442,3 +442,39 @@ function test_foldShouldHandleEmptyInput()
     assert( o[1] == 1 )
     assert( o[2] == nil )
 end
+
+function test_anyShouldReturnFalseOnEmptyInput()
+    local o = seq.empty().any( function (n) return n == 1 end ).evaluate
+
+    assert( o[1] == false )
+end
+
+function test_anyShouldReturnFalseWhenNoMatchesExist()
+    local o = seq.toSeq{ 1,2,3 }.any( function (n) return n == 4 end ).evaluate
+
+    assert( o[1] == false )
+end
+
+function test_anyShouldReturnTrue()
+    local o = seq.toSeq{ 1,2,3 }.any( function (n) return n == 2 end ).evaluate
+
+    assert( o[1] == true )
+end
+
+function test_allShouldReturnTrueOnEmptyInput()
+    local o = seq.empty().all( function (n) return n == 1 end ).evaluate
+    
+    assert( o[1] == true )
+end
+
+function test_allShouldReturnFalseWhenAnyItemDoesNotMatch()
+    local o = seq.toSeq{ 1,1,1,1,2,1 }.all( function (n) return n == 1 end ).evaluate
+
+    assert( o[1] == false )
+end
+
+function test_allShouldReturnTrueWhenAllItemsMatch()
+    local o = seq.toSeq{ 1,1,1,1,1 }.all( function (n) return n == 1 end ).evaluate
+
+    assert( o[1] == true )
+end
