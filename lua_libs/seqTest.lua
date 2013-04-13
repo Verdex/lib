@@ -428,3 +428,17 @@ function test_zipWithShouldHandleUnequalInputs()
     assert( o2[2] == 4 )
     assert( o2[3] == nil )
 end
+
+function test_foldShouldFunction()
+    local o = seq.toSeq{ 1,2,3 }.fold( 1, function (a,b) return a + b end ).evaluate
+
+    assert( o[1] == 7 )
+    assert( o[2] == nil )
+end
+
+function test_foldShouldHandleEmptyInput()
+    local o = seq.empty().fold( 1, function (a,b) return a + b end ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == nil )
+end

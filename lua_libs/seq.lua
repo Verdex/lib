@@ -5,6 +5,9 @@ after it has been given to a sequence or doing the same to the output of
 a sequence evaluation is undefined.  The effect on sibling, ancestor, or
 descendent sequences is almost definitely not desired.
 
+Seq functions that reduce to a scalar will place that scalar into a
+readonly array.  Things like fold, any, etc.
+
 --]]
 
 
@@ -176,8 +179,13 @@ function seqMeta.zipWith( input1, input2, zip )
     end
 end
 
-
+function seqMeta.fold( input, init, folder )
+    for _, v in input:ipairs() do
+        init = folder( v, init )
+    end
+    return { init }
+end
+    
 -- TODO several cases of output[#output+1] can be replaced with output[i] (not all)
--- TODO  zipWith
 -- TODO fold, all, and any other function that reduces to a scalar
 -- isn't going to work very well.  Need to find work around.
