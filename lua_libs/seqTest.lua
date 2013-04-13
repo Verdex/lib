@@ -311,17 +311,35 @@ function test_takeMoreItemsThanExistWorks()
 end
 
 function test_dropWhileShouldHandleEmptySeq()
+    local o = seq.empty().dropWhile( function (x) return false end ).evaluate
 
+    assert( o[1] == nil )
 end
 
 function test_dropWhileShouldDropWhilePredicateIsTrue()
--- make sure that the item that makes predicate false gets included with the output
+    local o = seq.toSeq{ 1,3,5,7,8,10,11,12 }.dropWhile( function (n) return n % 2 == 1 end ).evaluate
+
+    assert( o[1] == 8 )
+    assert( o[2] == 10 )
+    assert( o[3] == 11 )
+    assert( o[4] == 12 )
 end
 
 function test_dropWhileShouldHandleAlwaysTrue()
+    local o = seq.toSeq{ 1,3,5,7,8,10,11,12 }.dropWhile( function (n) return true end ).evaluate
 
+    assert( o[1] == nil )
 end
 
 function test_dropWhileShouldHandleAlwaysFalse()
+    local o = seq.toSeq{ 1,3,5,7,8,10,11,12 }.dropWhile( function (n) return false end ).evaluate
 
+    assert( o[1] == 1 )
+    assert( o[2] == 3 )
+    assert( o[3] == 5 )
+    assert( o[4] == 7 )
+    assert( o[5] == 8 )
+    assert( o[6] == 10 )
+    assert( o[7] == 11 )
+    assert( o[8] == 12 )
 end

@@ -130,7 +130,7 @@ function seqMeta.dropWhile( input, pred )
     local output = {}
     local done = false
     for _, v in input:ipairs() do
-        if done == false and pred( v ) then
+        if done == false and pred( v ) == false then
             done = true
         end
         if done then
@@ -141,6 +141,6 @@ function seqMeta.dropWhile( input, pred )
 end
 
 -- TODO several cases of output[#output+1] can be replaced with output[i] (not all)
--- TODO drop while, take while, zip, zipWith
+-- TODO take while, zip, zipWith
 -- TODO fold, all, and any other function that reduces to a scalar
 -- isn't going to work very well.  Need to find work around.
