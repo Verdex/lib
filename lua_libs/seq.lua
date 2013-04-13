@@ -125,6 +125,22 @@ function seqMeta.take( input, takeCount )
     end
     return output
 end
--- TODO take, drop while, take while, zip, zipWith
+
+function seqMeta.dropWhile( input, pred )
+    local output = {}
+    local done = false
+    for _, v in input:ipairs() do
+        if done == false and pred( v ) then
+            done = true
+        end
+        if done then
+            output[#output + 1] = v
+        end
+    end
+    return output
+end
+
+-- TODO several cases of output[#output+1] can be replaced with output[i] (not all)
+-- TODO drop while, take while, zip, zipWith
 -- TODO fold, all, and any other function that reduces to a scalar
 -- isn't going to work very well.  Need to find work around.

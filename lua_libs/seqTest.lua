@@ -310,3 +310,18 @@ function test_takeMoreItemsThanExistWorks()
     assert( o[4] == nil )
 end
 
+function test_dropWhileShouldHandleEmptySeq()
+
+end
+
+function test_dropWhileShouldDropWhilePredicateIsTrue()
+-- make sure that the item that makes predicate false gets included with the output
+end
+
+function test_dropWhileShouldHandleAlwaysTrue()
+
+end
+
+function test_dropWhileShouldHandleAlwaysFalse()
+
+end
