@@ -343,3 +343,33 @@ function test_dropWhileShouldHandleAlwaysFalse()
     assert( o[7] == 11 )
     assert( o[8] == 12 )
 end
+
+function test_takeWhileShouldHandleEmptySeq()
+    local o = seq.empty().takeWhile( function (n) return true end ).evaluate
+
+    assert( o[1] == nil )
+end
+
+function test_takeWhileShouldTakeWhilePredicateIsTrue()
+    local o = seq.toSeq{ 1,3,5,6,7,9 }.takeWhile( function (n) return n % 2 == 1 end ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 3 )
+    assert( o[3] == 5 )
+    assert( o[4] == nil )
+end
+
+function test_takeWhileShouldHandlePredicateAlwaysTrue()
+    local o = seq.toSeq{ 1,2,3,4 }.takeWhile( function (n) return true end ).evaluate
+
+    assert( o[1] == 1 )
+    assert( o[2] == 2 )
+    assert( o[3] == 3 )
+    assert( o[4] == 4 )
+end
+
+function test_takeWhileShouldHandlePredicateAlwaysFalse()
+    local o = seq.toSeq{ 1,2,3,4 }.takeWhile( function (n) return false end ).evaluate
+
+    assert( o[1] == nil )
+end

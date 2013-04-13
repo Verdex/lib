@@ -140,6 +140,17 @@ function seqMeta.dropWhile( input, pred )
     return output
 end
 
+function seqMeta.takeWhile( input, pred )
+    local output = {}
+    for i, v in input:ipairs() do
+        if pred( v ) == false then
+            break
+        end
+        output[i] = v
+    end
+    return output
+end
+
 -- TODO several cases of output[#output+1] can be replaced with output[i] (not all)
 -- TODO take while, zip, zipWith
 -- TODO fold, all, and any other function that reduces to a scalar
