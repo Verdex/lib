@@ -1,3 +1,5 @@
 *.swp
 *.o
-do_not_include
+lauxlib.h
+lua.h
+luaconf.h
