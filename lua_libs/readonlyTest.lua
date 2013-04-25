@@ -2,7 +2,7 @@
 require 'readonly'
 require 'test'
 
-test.init()
+_ENV = test.init()
 
 function test_shouldErrorWhenSettingIndex()
     local ro = readonly.shallowReadonly{ 1, 2, 3 }

@@ -23,7 +23,7 @@ meta.__index = _G
 setmetatable( tests, meta )
 
 function init() 
-    setfenv( 2, tests )
+   return tests 
 end
 
 local throwUnexpectedMsg = 

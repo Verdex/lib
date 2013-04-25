@@ -3,7 +3,7 @@ require 'seq'
 require 'readonly'
 require 'test'
 
-test.init()
+_ENV = test.init()
 
 function test_shouldEvaluateOpLessSeq()
     local s = seq.toSeq{ 1,2,3 }
