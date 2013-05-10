@@ -18,3 +18,15 @@ end
 function ana( generator, stopPred )
     return function( b ) return anaHelper( {}, generator, stopPred, b )
 end
+
+-- initial : b
+-- folder : (a, b) -> b
+-- catamorphism : [a] -> b
+function cata( initial, folder )
+    return function( array )
+        for _, a in ipairs( array ) do
+            initial = folder( a, initial )
+        end
+        return initial
+    end
+end
