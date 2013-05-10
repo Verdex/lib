@@ -16,7 +16,7 @@ end
 -- stopPred : b -> bool
 -- anamorphism : b -> [a]
 function ana( generator, stopPred )
-    return function( seed ) return anaHelper( {}, generator, stopPred, seed )
+    return function( seed ) return anaHelper( {}, generator, stopPred, seed ) end
 end
 
 -- initial : b
@@ -38,9 +38,9 @@ local function hyloHelper( i, fold, gen, pred, s )
     end
    
     local a, s = gen( s )
-    return fold( a, hyloHelper( i, folder, gen, pred, s ) )
+    return fold( a, hyloHelper( i, fold, gen, pred, s ) )
 end 
     
 function hylo( initial, folder, generator, stopPred )
-    return function( seed ) return hyloHelper( initial, folder, generator, stopPred, seed )
+    return function( seed ) return hyloHelper( initial, folder, generator, stopPred, seed ) end
 end
