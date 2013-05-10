@@ -39,7 +39,12 @@ local function hyloHelper( i, fold, gen, pred, s )
     local a, s = gen( s )
     return fold( a, hyloHelper( i, fold, gen, pred, s ) )
 end 
-    
+   
+-- initial : c
+-- folder : (b, c) -> c
+-- generator : a -> (a, b)
+-- stopPred : b -> bool
+-- hylomorphism : a -> c
 function hylo( initial, folder, generator, stopPred )
     return function( seed ) return hyloHelper( initial, folder, generator, stopPred, seed ) end
 end
