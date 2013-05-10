@@ -31,7 +31,6 @@ function cata( initial, folder )
     end
 end
 
--- TODO make sure to test this, im not convinced i got this right
 local function hyloHelper( i, fold, gen, pred, s )
     if pred( s ) then
         return i 
