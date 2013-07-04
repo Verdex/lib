@@ -36,4 +36,3 @@ module Units where
     data SUnit : List Unit -> List Unit -> Set where
         sunit : ( a : List Unit ) -> ( b : List Unit ) -> SUnit a b
 
-    --smult (n1, t1) (n2, t2) = (n1 * n2    
