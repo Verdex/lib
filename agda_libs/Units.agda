@@ -1,3 +1,5 @@
+-- TODO:  Need a way to reduce and equate SUnit (mi * mi / mi == mi / 1 and 
+                                                mi sec == sec mi, etc)
 
 module Units where
 
