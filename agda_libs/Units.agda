@@ -21,7 +21,6 @@ module Units where
     data Unit : Set where
         mile : Unit 
         second : Unit
-        unit : Unit
 
     data List ( A : Set ) : Set where
         [] : List A
@@ -34,5 +33,11 @@ module Units where
     (h :: t) ++ b = t ++ (h :: b)
 
     data SUnit : List Unit -> List Unit -> Set where
-        sunit : ( a : List Unit ) -> ( b : List Unit ) -> SUnit a b
+        sunit : { a b : List Unit } -> Nat -> SUnit a b
 
+    miles : Nat -> SUnit (mile :: []) []
+    miles = sunit
+
+    seconds : Nat -> SUnit (second :: []) []
+    seconds = sunit
+    
