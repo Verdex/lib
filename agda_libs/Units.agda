@@ -1,5 +1,6 @@
 -- TODO:  Need a way to reduce and equate SUnit (mi * mi / mi == mi / 1 and 
-                                                mi sec == sec mi, etc)
+--                                                mi sec == sec mi, etc)
+-- really want I want is permutation equivalence
 
 module Units where
 
@@ -18,7 +19,7 @@ module Units where
     a * (suc zero) = a
     a * (suc b) = a * b + a
 
-    infixl 10 _*_
+    infixl 20 _*_
 
     data Unit : Set where
         mile : Unit 
