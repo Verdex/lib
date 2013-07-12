@@ -1,6 +1,9 @@
 -- TODO:  Need a way to reduce and equate SUnit (mi * mi / mi == mi / 1 and 
 --                                                mi sec == sec mi, etc)
 -- really want I want is permutation equivalence
+-- It looks like there are two ways to prove a property
+-- 1) create an explicit proof object
+-- 2) create data type that "implements" the permutation property
 
 module Units where
 
@@ -46,6 +49,10 @@ module Units where
    
     mult : { a b c d : List Unit } -> SUnit a b -> SUnit c d  -> SUnit (a ++ c) (b ++ d)
     mult (sunit n1) (sunit n2) = sunit (n1 * n2)
+
+    blah : List Unit -> Nat
+    blah [] = zero
+    blah (_ :: _)  = zero
 
     add : { a b : List Unit } -> SUnit a b -> SUnit a b -> SUnit a b
     add (sunit n1) (sunit n2) = sunit (n1 + n2)
