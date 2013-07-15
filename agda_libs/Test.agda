@@ -1,8 +1,10 @@
 
 module Test where
 
-    open import Units
     open import List
+    open import Number
+    open import Units
+    
 
     ikky : SUnit ( mile :: second :: [] ) []
     ikky = sunit (suc zero)
