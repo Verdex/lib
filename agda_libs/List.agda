@@ -13,22 +13,23 @@ module List where
     [] ++ b = b
     (h :: t) ++ b = t ++ ( h :: b )
 
-    -- I'll look into figuring out a better way to handle equality
-    -- later (it's not really what I'm interested right now)
-    isMember : { A : Set } -> (A -> A -> Bool) -> A -> List A -> Bool
-    isMember eq item [] = false
-    isMember eq item (a :: as) with eq item a
+    any : { A : Set } -> (A -> Bool) -> List A -> Bool
+    any pred [] = false
+    any pred (a :: as) with pred a 
     ... | true = true
-    ... | false = isMember eq item as
+    ... | false = any pred as
+
+    removeFirstMatch : { A : Set } -> (A -> Bool) -> List A -> List A
+    removeFirstMatch match [] = []
+    removeFirstMatch match (a :: as) with match a
+    ... | true = as
+    ... | false = a :: (removeFirstMatch match as)
 
     arePermutations : { A : Set } -> (A -> A -> Bool) -> List A -> List A -> Bool
     arePermutations eq [] [] = true
     arePermutations eq [] (b :: bs) = false
     arePermutations eq (a :: as) [] = false
-    -- not right yet, pretty sure i need a remove function
-    arePermutations eq (a :: as) (b :: bs) = 
-        (isMember eq a bs) 
-        and (isMember eq b as) 
-        and (arePermutations eq as (b :: bs))
-        and (arePermutations eq bs (a :: as))
+    arePermutations eq (a :: as) bs = 
+        (any (eq a) bs)
+        and (arePermutations eq as (removeFirstMatch (eq a) bs))
 
