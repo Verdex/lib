@@ -6,21 +6,16 @@ ikky :: (a->b) -> (b->[a]->c) -> [a] -> [a] -> [c]
 ikky f g _ [] = []
 ikky f g as (b:bs) = (g (f b) (as ++ bs)) : ikky f g (as++[b]) bs
 
---jabber :: [a] -> [[a]]
---jabber a = ikky 
 
-
---perm [] = [[]] -- ?
---perm as = ikky (\j-> (j:)) (\p-> \d -> map p (perm d)) [] as
-
+half ([],bs) = [[],bs]
 half ((a:as),bs)
-    | length (a:as) <= length bs = [a:as, bs]
+    | length (a:as) <= length bs = [(a:as),bs]
     | otherwise = half (as, a:bs)
 
 halfList as = half (as,[])
 
-mergeLists [[]] = []
-mergeLists 
+mergeLists :: Ord a => [[a]] -> [a]
+mergeLists = foldr mergeList []
 
 mergeList a [] = a
 mergeList [] b = b
@@ -29,6 +24,14 @@ mergeList (a:as) (b:bs)
     | otherwise = b : mergeList (a:as) bs
 
 wocky _ _ [] = []
+wocky _ _ [a] = [a]
 wocky split combine as = combine (map (wocky split combine) (split as))
 
-mergeSort = wocky halfList mergeList
+mergeSort :: Ord a => [a] -> [a]
+mergeSort = wocky halfList mergeLists
+
+
+--split : [a] -> [[a]]
+--comb : [[a]] -> [b]
+
+--final :: [a] -> [b]
