@@ -46,12 +46,6 @@ permTrans f (c, as) = (c, foldr (++) [] (f as))
 perm :: [a] -> [[a]]
 perm = wocky permTrans permSplit permComb
 
---split : [a] -> [[a]]
---comb : [[a]] -> [b]
-
--- map : ((c, [a]) -> (c, [a])) -> [(c, [a])]
--- trans : ([a] -> [a]) -> (c, [a]) -> (c, [a]) 
--- split : [a] -> [(c, [a])]
--- comb : [(c, [a])] -> [[a]]
--- wocky : [a] -> [b]
-
+perm2 :: [a] -> [[a]]
+perm2 [] = [[]]
+perm2 as = foldl (++) [] (map ( \ (b, bs) -> map (b:) (perm2 bs) ) (permSplit as))
