@@ -22,7 +22,7 @@ mergeList (a:as) (b:bs)
     | a < b = a : mergeList as (b:bs)
     | otherwise = b : mergeList (a:as) bs
 
-
+wocky :: (([a] -> b) -> c -> c) -> ([a] -> [c]) -> ([c] -> b) -> [a] -> b
 wocky _ s c [] = c (s [])
 wocky _ s c [a] = c (s [a])
 wocky trans split combine as = combine (map (trans (wocky trans split combine)) (split as))
@@ -40,8 +40,11 @@ permComb :: [(a, [a])] -> [[a]]
 permComb [] = []
 permComb ((f, rs) : ns) = (f:rs) : permComb ns
 
+permTrans :: ([a] -> [[a]]) -> (c, [a]) -> (c, [a])
+permTrans f (c, as) = (c, foldr (++) [] (f as))
+
 perm :: [a] -> [[a]]
-perm = undefined
+perm = wocky permTrans permSplit permComb
 
 --split : [a] -> [[a]]
 --comb : [[a]] -> [b]
