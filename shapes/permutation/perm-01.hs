@@ -22,13 +22,13 @@ mergeList (a:as) (b:bs)
     | a < b = a : mergeList as (b:bs)
     | otherwise = b : mergeList (a:as) bs
 
-wocky :: (([a] -> b) -> c -> c) -> ([a] -> [c]) -> ([c] -> b) -> [a] -> b
-wocky _ s c [] = c (s [])
-wocky _ s c [a] = c (s [a])
-wocky trans split combine as = combine (map (trans (wocky trans split combine)) (split as))
+--wocky :: (([a] -> b) -> c -> c) -> ([a] -> [c]) -> ([c] -> b) -> [a] -> b
+wocky b t s c [] = c (map (t (\ as -> b)) (s []))
+--wocky b t s c [a] = c (map (t (wocky t s c)) (s [a]))
+wocky b trans split combine as = combine (map (trans (wocky trans split combine)) (split as))
 
 mergeSort :: Ord a => [a] -> [a]
-mergeSort = wocky id halfList mergeLists
+mergeSort = wocky [] id halfList mergeLists
 
 permSplit :: [a] -> [(a, [a])]
 permSplit = permSplitHelper []
@@ -36,15 +36,13 @@ permSplit = permSplitHelper []
 permSplitHelper _ [] = []
 permSplitHelper as (b:bs) = (b, (as ++ bs)) : permSplitHelper (as++[b]) bs
 
-permComb :: [(a, [a])] -> [[a]]
-permComb [] = []
-permComb ((f, rs) : ns) = (f:rs) : permComb ns
+permComb = foldl (++) []
 
-permTrans :: ([a] -> [[a]]) -> (c, [a]) -> (c, [a])
-permTrans f (c, as) = (c, foldr (++) [] (f as))
+permTrans :: ([a] -> [[a]]) -> (a, [a]) -> [[a]] 
+permTrans f (c, as) = map (c:) (f as)
 
 perm :: [a] -> [[a]]
-perm = wocky permTrans permSplit permComb
+perm = wocky [[]] permTrans permSplit permComb
 
 perm2 :: [a] -> [[a]]
 perm2 [] = [[]]
