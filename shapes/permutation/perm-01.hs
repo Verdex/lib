@@ -1,4 +1,11 @@
 
+blah _ [] = []
+blah as (b1:bs) = (show b1, show (as ++ bs)) : blah (as++[b1]) bs
+
+ikky :: (a->b) -> (b->[a]->c) -> [a] -> [a] -> [c]
+ikky f g _ [] = []
+ikky f g as (b:bs) = (g (f b) (as ++ bs)) : ikky f g (as++[b]) bs
+
 half ([],bs) = [[],bs]
 half ((a:as),bs)
     | length (a:as) <= length bs = [(a:as),bs]
@@ -23,6 +30,18 @@ wocky trans split combine as = combine (map (trans (wocky trans split combine)) 
 mergeSort :: Ord a => [a] -> [a]
 mergeSort = wocky id halfList mergeLists
 
+permSplit :: [a] -> [(a, [a])]
+permSplit = permSplitHelper []
+
+permSplitHelper _ [] = []
+permSplitHelper as (b:bs) = (b, (as ++ bs)) : permSplitHelper (as++[b]) bs
+
+permComb :: [(a, [a])] -> [[a]]
+permComb [] = []
+permComb ((f, rs) : ns) = (f:rs) : permComb ns
+
+perm :: [a] -> [[a]]
+perm = undefined
 
 --split : [a] -> [[a]]
 --comb : [[a]] -> [b]
@@ -30,6 +49,6 @@ mergeSort = wocky id halfList mergeLists
 -- map : ((c, [a]) -> (c, [a])) -> [(c, [a])]
 -- trans : ([a] -> [a]) -> (c, [a]) -> (c, [a]) 
 -- split : [a] -> [(c, [a])]
--- comb : [(c, [a])] -> [a]
+-- comb : [(c, [a])] -> [[a]]
 -- wocky : [a] -> [b]
 
