@@ -59,3 +59,12 @@ perm3 t c s as = c (map (t (perm3 t c s)) (s as))
 --perm4 = perm3 permTrans permComb permSplit
 
 
+perm5 :: (m (f a) -> j a) 
+            -> ([j a] -> j a) 
+            -> (f a -> [m (f a)])
+            -> f a -> j a
+
+perm5 r c s as = c (map r (s as))
+
+perm6 :: [a] -> [[a]]
+perm6 = perm5 (permTrans perm6) permComb permSplit
