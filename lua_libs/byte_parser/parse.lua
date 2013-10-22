@@ -3,8 +3,8 @@
 frame <name>
     capture( <name> <parser>  )
     ditch( <parser> )
-    constant -- ??
-    choice (
+    constant -- ??  (also will need the same sig as ditch and capture)
+    choice ( -- this guy is going to need the same sig as ditch and capture ...
         case( <predicate> capture( <name> <parser> ) )
         case( <predicate> ditch( <parser> ) )
         case( <predicate> empty )
@@ -13,7 +13,7 @@ frame <name>
         otherwise( empty )
 
 otherwise = app <case> -> true
-<case> : env -> bool
+<case> : ?? 
 <name> : string
 <parser> : byte array -> (bool, value)
 
@@ -48,7 +48,7 @@ function env_var( var )
 end
 
 function empty( byte_array ) 
-    return true, nil 
+    return true
 end
 
 function constant(  ) -- this seems a lot like a special case of choice but with one item and otherwise fail
@@ -91,9 +91,21 @@ function choice( ... ) -- takes a list of cases
 end
 
 function frame( name, ... )
-    local stuff = {...}
-    return stuff
-
+    local fieldStuff = {...}  -- seriously, whats a good name for this?
+    local env = {}
+    return function ( byte_array )
+        for _, fs in ipairs( fieldStuff ) do
+            -- at first I thought i was going overboard with the FP stuff
+            -- but at second glance, I'm not sure that my env_var and val 
+            -- functions will work the way I want to without the currying 
+            -- stuff going on ... investigate further and refactor
+            local successful = fs( env )( byte_array ) 
+            if not successful then 
+                return false, nil
+            end
+        end
+        return true, env
+    end 
 end
 
 function parse( frame, byteString )
