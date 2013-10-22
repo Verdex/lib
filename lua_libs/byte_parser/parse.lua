@@ -1,5 +1,13 @@
 
 --[[
+
+the thought does occur that i could add some sort of post processing step to
+the frame function (an optional parameter), but I suspect that it will be 
+better to just wrap the frame's output parsing function with another
+function which performs that operation (that way things will be more modular
+and you could reuse a frame without the processing that another module
+would otherwise force on you)
+
 frame <name>
     capture( <name> <parser>  )
     ditch( <parser> )
@@ -90,7 +98,7 @@ function choice( ... ) -- takes a list of cases
 
 end
 
-function frame( name, ... )
+function frame( name, ... ) -- does name make sense anymore?
     local fieldStuff = {...}  -- seriously, whats a good name for this?
     local env = {}
     return function ( byte_array )
@@ -108,6 +116,30 @@ function frame( name, ... )
     end 
 end
 
-function parse( frame, byteString )
+function parse_byte( byte_array )
+    -- can this operation fail?
+    local val = string.byte( byte_array.byte_string, byte_array.index )
+    byte_array.index = byte_array.index + 1
+    return true, val
+end
+
+function parse( frame, byteString ) -- decide if byte_string or byte_array is better 
 
 end
+
+
+input = string.char( 3 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char( 6 )
+
+parser = frame( "4byte", 
+    capture( "zero", parse_byte ),
+    capture( "one", parse_byte ),
+    capture( "two", parse_byte ),
+    capture( "three", parse_byte ) )
+
+suc, env = parser( cons_byte_array( input ) )
+
+assert( suc )
+assert( env.zero == 3 )
+assert( env.one == 4 )
+assert( env.two == 5 )
+assert( env.three == 6 )
