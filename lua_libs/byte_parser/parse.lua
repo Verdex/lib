@@ -127,8 +127,21 @@ function parse( frame, byteString ) -- decide if byte_string or byte_array is be
 
 end
 
+function n_times( n, parser ) --> parser
+    -- this isn't exactly right, but i think the basic gist is good
+    -- captures are just modified parsers (ie parser -> name -> env -> parser)
+    -- to be sure i can just write capture_n_times and ditch_n_times, but i think
+    -- i would like things to be a bit more generic.  I'll see if there
+    -- isn't a refactor that lets me do this.  
+
+    -- I think I either need to add env to the parser interface
+    -- or i need to rewrite capture and ditch to have ditch_n_times, etc versions
+    -- or i need do notation and monads (you know lua does have an eval)
+end
+
 
 input = string.char( 3 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char( 6 )
+
 
 parser = frame( "4byte", 
     capture( "zero", parse_byte ),
