@@ -84,6 +84,40 @@ function capture( name, parser )
     end
 end
 
+function ditch_array( count, parser )
+    return function ( env )
+        return function ( byte_array )
+            local c = count( env )  
+            for i = 1, c do
+                local status, value = parser( byte_array )
+                if not( status ) then
+                    return false
+                end
+            end
+            return true
+        end
+    end
+end
+
+function capture_array( count, name, parser )
+    return function ( env )
+        return function ( byte_array )
+            local c = count( env )  
+            local a = {}
+            for i = 1, c do
+                local status, value = parser( byte_array )
+                if status then
+                    a[i] = value
+                else
+                    return false;
+                end
+            end
+            env[name] = a
+            return true
+        end
+    end
+end
+
 -- capture meaning the output of the capture function
 -- predicate meaning function of env -> bool
 function case( predicate, capture )
@@ -127,19 +161,6 @@ function parse( frame, byteString ) -- decide if byte_string or byte_array is be
 
 end
 
-function n_times( n, parser ) --> parser
-    -- this isn't exactly right, but i think the basic gist is good
-    -- captures are just modified parsers (ie parser -> name -> env -> parser)
-    -- to be sure i can just write capture_n_times and ditch_n_times, but i think
-    -- i would like things to be a bit more generic.  I'll see if there
-    -- isn't a refactor that lets me do this.  
-
-    -- I think I either need to add env to the parser interface
-    -- or i need to rewrite capture and ditch to have ditch_n_times, etc versions
-    -- or i need do notation and monads (you know lua does have an eval)
-end
-
-
 input = string.char( 3 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char( 6 )
 
 
@@ -156,3 +177,17 @@ assert( env.zero == 3 )
 assert( env.one == 4 )
 assert( env.two == 5 )
 assert( env.three == 6 )
+
+
+
+input = string.char( 3 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char( 6 )
+
+blah = frame( "blah",
+    capture_array( val( 4 ), "ikky", parse_byte ) )
+
+suc, env = blah( cons_byte_array( input ) )
+assert( suc )
+assert( env.ikky[1] == 3 )
+assert( env.ikky[2] == 4 )
+assert( env.ikky[3] == 5 )
+assert( env.ikky[4] == 6 )
