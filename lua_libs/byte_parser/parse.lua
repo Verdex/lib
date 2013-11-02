@@ -132,7 +132,7 @@ function choice( ... ) -- takes a list of cases
 
 end
 
-function frame( name, ... ) -- does name make sense anymore?
+function frame( ... ) 
     local fieldStuff = {...}  -- seriously, whats a good name for this?
     local env = {}
     return function ( byte_array )
@@ -154,7 +154,7 @@ function parse_byte( byte_array )
     -- can this operation fail?
     local val = string.byte( byte_array.byte_string, byte_array.index )
     byte_array.index = byte_array.index + 1
-    return true, val
+    return true, tonumber( val )
 end
 
 function parse( frame, byteString ) -- decide if byte_string or byte_array is better 
@@ -164,7 +164,7 @@ end
 input = string.char( 3 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char( 6 )
 
 
-parser = frame( "4byte", 
+parser = frame( 
     capture( "zero", parse_byte ),
     capture( "one", parse_byte ),
     capture( "two", parse_byte ),
@@ -179,10 +179,9 @@ assert( env.two == 5 )
 assert( env.three == 6 )
 
 
-
 input = string.char( 3 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char( 6 )
 
-blah = frame( "blah",
+blah = frame( 
     capture_array( val( 4 ), "ikky", parse_byte ) )
 
 suc, env = blah( cons_byte_array( input ) )
@@ -191,3 +190,17 @@ assert( env.ikky[1] == 3 )
 assert( env.ikky[2] == 4 )
 assert( env.ikky[3] == 5 )
 assert( env.ikky[4] == 6 )
+
+input = string.char( 4 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char( 6 ) .. string.char( 7 )
+
+blah = frame( 
+    capture( "length", parse_byte ),
+    capture_array( env_var( "length" ), "ikky", parse_byte ) )
+
+suc, env = blah( cons_byte_array( input ) )
+assert( suc )
+assert( env.length == 4 )
+assert( env.ikky[1] == 4 )
+assert( env.ikky[2] == 5 )
+assert( env.ikky[3] == 6 )
+assert( env.ikky[4] == 7 )
