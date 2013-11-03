@@ -121,7 +121,7 @@ end
 -- capture meaning the output of the capture function
 -- predicate meaning function of env -> bool
 function case( predicate, capture )
-
+    
 end
 
 function otherwise( capture ) -- this is just a special case
@@ -167,7 +167,7 @@ input = string.char( 3 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char(
 parser = frame( 
     capture( "zero", parse_byte ),
     capture( "one", parse_byte ),
-    capture( "two", parse_byte ),
+     capture( "two", parse_byte ),
     capture( "three", parse_byte ) )
 
 suc, env = parser( cons_byte_array( input ) )
