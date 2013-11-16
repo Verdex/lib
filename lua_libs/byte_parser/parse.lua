@@ -20,16 +20,18 @@ frame <name>
         otherwise( ditch( <parser> ) )
         otherwise( empty )
 
-otherwise = app <case> -> true
-<case> : ?? 
-<name> : string
-<parser> : byte array -> (bool, value)
+maybe a = bool, a
+parser a = byte_array -> maybe a
+result = env -> bool
+capture = (str, parser a) -> (env, byte_array) -> result
+capture_array = ((env->int), str, parser a) -> (env, byte_array) -> result
 
-frame probably has to be a parser
-dont need a lookup table of parser names if 
-the frame function just returns a parser function
+choice( ... ) = (env, byte_array) -> result
+case pred (cap|dit) = (env, byte_array) -> result
+pred = val|var, val|var, (?->?->bool)
+val|var = (env -> ?)
 
-parse : main frame -> bytes -> (bool, data model)
+
 --]]
 
 function cons_byte_array( byte_string )
@@ -167,7 +169,7 @@ input = string.char( 3 ) .. string.char( 4 ) .. string.char( 5 ) .. string.char(
 parser = frame( 
     capture( "zero", parse_byte ),
     capture( "one", parse_byte ),
-     capture( "two", parse_byte ),
+    capture( "two", parse_byte ),
     capture( "three", parse_byte ) )
 
 suc, env = parser( cons_byte_array( input ) )
