@@ -22,13 +22,12 @@ frame <name>
 
 maybe a = bool, a
 parser a = byte_array -> maybe a
-result = env -> bool
-capture = (str, parser a) -> (env, byte_array) -> result
-capture_array = ((env->int), str, parser a) -> (env, byte_array) -> result
+capture = (str, parser a) -> (env, byte_array) -> maybe a 
+capture_array = ((env->int), str, parser a) -> (env, byte_array) -> maybe a
 
-choice( ... ) = (env, byte_array) -> result
-case pred (cap|dit) = (env, byte_array) -> result
-pred = val|var, val|var, (?->?->bool)
+choice( ... ) = (env, byte_array) -> maybe a 
+case pred (cap|dit) = (env, byte_array) -> maybe a 
+pred = val|var, val|var, (?->?->bool) -> env -> bool
 val|var = (env -> ?)
 
 
@@ -67,63 +66,59 @@ end
 
 -- capture, but do not store value in an environment name
 function ditch( parser )
-    return function ( env )
-        return function ( byte_array )
-            return parser( byte_array )
-        end
+    return function ( env, byte_array )
+        return parser( byte_array )
     end
 end
 
 function capture( name, parser )
-    return function ( env )
-        return function ( byte_array )
-            local status, value = parser( byte_array )
-            if status then
-                env[name] = value
-            end
-            return status
+    return function ( env, byte_array )
+        local status, value = parser( byte_array )
+        if status then
+            env[name] = value
         end
+        return status
     end
 end
 
 function ditch_array( count, parser )
-    return function ( env )
-        return function ( byte_array )
-            local c = count( env )  
-            for i = 1, c do
-                local status, value = parser( byte_array )
-                if not( status ) then
-                    return false
-                end
+    return function ( env, byte_array )
+        local c = count( env )  
+        for i = 1, c do
+            local status, value = parser( byte_array )
+            if not( status ) then
+                return false
             end
-            return true
         end
+        return true
     end
 end
 
 function capture_array( count, name, parser )
-    return function ( env )
-        return function ( byte_array )
-            local c = count( env )  
-            local a = {}
-            for i = 1, c do
-                local status, value = parser( byte_array )
-                if status then
-                    a[i] = value
-                else
-                    return false;
-                end
+    return function ( env, byte_array )
+        local c = count( env )  
+        local a = {}
+        for i = 1, c do
+            local status, value = parser( byte_array )
+            if status then
+                a[i] = value
+            else
+                return false;
             end
-            env[name] = a
-            return true
         end
+        env[name] = a
+        return true
     end
 end
 
--- capture meaning the output of the capture function
--- predicate meaning function of env -> bool
-function case( predicate, capture )
-    
+function case( pred, capture )
+    return function ( env, byte_array )
+        if pred( env ) then
+
+        else
+
+        end
+    end
 end
 
 function otherwise( capture ) -- this is just a special case
@@ -139,11 +134,7 @@ function frame( ... )
     local env = {}
     return function ( byte_array )
         for _, fs in ipairs( fieldStuff ) do
-            -- at first I thought i was going overboard with the FP stuff
-            -- but at second glance, I'm not sure that my env_var and val 
-            -- functions will work the way I want to without the currying 
-            -- stuff going on ... investigate further and refactor
-            local successful = fs( env )( byte_array ) 
+            local successful = fs( env, byte_array ) 
             if not successful then 
                 return false, nil
             end
