@@ -64,6 +64,10 @@ function recursive_part( tot, s )
 end
 
 function perm( array )
+    if #array < 2 then
+        print_list( array )
+        return
+    end
     local str = splice( outer, { body = recursive_part( #array ) } )
     local f = loadstring( str )()
     f( array ) 
