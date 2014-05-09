@@ -5,6 +5,7 @@ data Parser a = Parse( String -> ( Maybe a, Parser a, String ) )
     | Stop
 
 
+-- TODO if the first parser fails then it probably makes sense to use it's retry
 instance Monad Parser where
     Stop >>= _ = Parse $ \ str -> ( Nothing, Stop, str )
     (Parse p1) >>= p2_gen = Parse $ \ str -> case p1 str of 
