@@ -1,5 +1,5 @@
 
-module P where
+module Parse where
 
 data Parser a = Parse( String -> ( Maybe a, Parser a, String ) )
     | Stop
@@ -24,6 +24,8 @@ get_string target =
             True -> ( Just target, Stop, drop l str )
             False -> ( Nothing, Stop, str )
 
+-- TODO this function should be renamed one or two
+-- Still needs some work
 non_greedy_oneOrMore :: Parser a -> Parser [a]
 non_greedy_oneOrMore Stop = Stop
 non_greedy_oneOrMore (Parse p) = Parse $ \ str -> case p str of
