@@ -5,7 +5,7 @@ data Parser a = Parse( String -> ( Maybe a, Parser a, String ) )
     | Stop
 
 
--- TODO if the first parser fails then it probably makes sense to use it's retry
+-- TODO if the first parser fails then it probably makes sense to use its retry
 instance Monad Parser where
     Stop >>= _ = Parse $ \ str -> ( Nothing, Stop, str )
     (Parse p1) >>= p2_gen = Parse $ \ str -> case p1 str of 
@@ -27,6 +27,17 @@ get_string target =
 
 -- TODO this function should be renamed one or two
 -- Still needs some work
+exactly :: Int -> Parser a -> Parser [a]
+exactly _ Stop = Stop
+exactly 0 (Parse p) = Parse $ \ str ->   
+    let (_,retry,str2) = p str in
+        (Just [], exactly 0 retry, str) 
+exactly n p = 
+    do
+        h <- p
+        r <- exactly (n-1) p
+        return (h:r)
+
 non_greedy_oneOrMore :: Parser a -> Parser [a]
 non_greedy_oneOrMore Stop = Stop
 non_greedy_oneOrMore (Parse p) = Parse $ \ str -> case p str of
